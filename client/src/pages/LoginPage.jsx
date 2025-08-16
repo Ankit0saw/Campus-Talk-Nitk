@@ -63,7 +63,7 @@ const LoginPage = () => {
       <div className="relative">
         <RotatingCircles isTransitioning={isTransitioning} />
         <img
-          src={assets.logo_big}
+          src={assets.logo}
           alt="logo"
           className={`w-[min(30vw,250px)] animate-breathe drop-shadow-2xl transition-all duration-500 relative z-10 ${
             isTransitioning ? "opacity-0 scale-95" : "opacity-100 scale-100"
