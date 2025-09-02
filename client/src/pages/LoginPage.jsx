@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
 import assets from "../assets/assets.js";
 import { AuthContext } from "../../context/AuthContext.jsx";
-import { LoginPageAnimation } from "../utils/LoginPageAnimation.js";
-import {
+import { LoginPageAnimation } from "../components/LoginPageAnimation.js";
+import{
   JumpingBalls,
   RotatingCircles,
 } from "../components/LoginPageBackground.jsx";

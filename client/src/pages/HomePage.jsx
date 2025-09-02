@@ -44,7 +44,7 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden relative">
+    <div className="min-h-screen bg-cover bg-center backdrop-blur-xl overflow-hidden relative">
               {/* Animated Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Jumping Gradient Balls */}
