@@ -1,22 +1,24 @@
-# Vaani-App
-A chat application designed to securely exchange messages with your loved ones.
+# CampusTalk-App
+
+A lightweight chat application designed for college campuses.
 
 🔗 **Live Preview**  
-[Click here to visit Vaani](https://vaani-app-xi.vercel.app/)
+[Click here to visit CampusTalk]()
 
-**Vaani** is a modern real-time chat and profile-based web application that lets users connect through messaging and personal expression. From authentication to real-time conversations, Vaani is built to be fast, clean, and intuitive.
+**CampusTalk** is a modern real-time chat and profile-based web application that lets users connect through messaging and personal expression. From authentication to real-time conversations, CampusTalk is built to be fast, clean, and intuitive.
 
 ---
 
 ## ⚙️ Features
 
 - ✅ **User Signup & Login** with secure authentication
-- ✏️ **Profile Update** with image upload and bio
+- ✏️ **Profile Update** with student details
+- 🔄 **Password update** for user profile
 - 💬 **Real-Time Messaging** powered by Socket.IO
 - ⏰ **Message Timestamp** shown with every chat
 - 🔔 **Unread Message Counter** per conversation
-- 🟢 **Online User Detection**
-- 📸 **Send & Receive Images in Chat**
+- 🟢 **Online/Offline Status**
+- 📸 **Images & Video Sending**
 - 📤 **Logout Button** to end session securely
 
 ---
@@ -27,8 +29,13 @@ A chat application designed to securely exchange messages with your loved ones.
 
 - **React.js** – UI framework
 - **Tailwind CSS** – Utility-first CSS framework
+- **React Router DOM** – Client-side routing
+- **Axios** – API requests
+- **Firebase** – Authentication / storage integration
 - **React Hot Toast** – Notification system
+- **Lucide React** – Icon library
 - **Socket.IO Client** – Real-time communication
+- **Vite** – Development build tool
 
 ### 🟢 Backend
 
@@ -38,6 +45,10 @@ A chat application designed to securely exchange messages with your loved ones.
 - **bcryptjs** – Password hashing
 - **Cloudinary** – Image uploads and CDN hosting
 - **Socket.IO** – Real-time messaging engine
+- **jsonwebtoken (JWT)** – User authentication
+- **dotenv** – Environment variable management
+- **CORS** – Cross-origin resource sharing
+- **Nodemon** – Development server auto-reload
 
 ---
 
@@ -45,11 +56,12 @@ A chat application designed to securely exchange messages with your loved ones.
 
 - Fully responsive and mobile-friendly design built with React and Tailwind CSS
 - Clean and intuitive chat interface with real-time updates using Context API
-- One-to-one messaging with image sharing and live online user status
+- One-to-one messaging with image & video sharing with progressive slider
+- Live online/offline user status and unread message counts with timestamps
 - Smooth transitions, gradient buttons, and form validations for better UX
 - Profile editing with avatar upload preview powered by Cloudinary
-- Unread message counts and timestamps enhance chat clarity
-
+- Users can update all personal details like name, gender, DOB, department, course, currentYear, Bio etc.
+- Secure password update and profile management
 
 ---
 

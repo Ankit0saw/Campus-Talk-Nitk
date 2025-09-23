@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import assets from "../assets/assets.js";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import { LoginPageAnimation } from "../components/LoginPageAnimation.js";
-import{
+import {
   JumpingBalls,
   RotatingCircles,
 } from "../components/LoginPageBackground.jsx";
@@ -13,32 +13,60 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [bio, setBio] = useState("");
+
+  const [gender, setGender] = useState("");
+  const [rollNumber, setRollNumber] = useState("");
+  const [department, setDepartment] = useState("");
+  const [course, setCourse] = useState("");
+  const [currentYear, setCurrentYear] = useState("");
+  const [dobType, setDobType] = useState("date");
+  const [dob, setDob] = useState("");
+  const [profilePic, setProfilePic] = useState(null);
+
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { login } = useContext(AuthContext);
 
-  const onSubmitHandler = (event) => {
+  const onSubmitHandler = async (event) => {
     event.preventDefault();
+    setError("");
 
     if (currState === "Sign Up" && !isDataSubmitted) {
+      if (!email.endsWith("@nitk.edu.in")) {
+        setError("Access Denied. Only @nitk.edu.in emails are allowed.");
+        return;
+      }
       setIsDataSubmitted(true);
       return;
     }
 
-    // --- Adding validation logic here ---
-    if (currState === "Sign Up" && !email.endsWith("@nitk.edu.in")) {
-      alert("Access Denied. Only @nitk.edu.in emails are allowed.");
-      return; // This stops the form from being submitted
-    }
+    setLoading(true);
 
     // Simulate login function
-    login(currState === "Sign Up" ? "signup" : "login", {
-      fullName,
-      email,
-      password,
-      bio,
-    });
+    if (currState === "Sign Up") {
+      const signupData = {
+        fullName,
+        email,
+        password,
+        bio,
+        gender,
+        rollNumber,
+        department,
+        course,
+        currentYear,
+        dob,
+      };
+
+      await login("signup", signupData);
+    } else if (currState === "Login") {
+      // Login logic
+      await login("login", { email, password });
+    }
+
+    setLoading(false);
   };
 
   const handleStateChange = (newState) => {
@@ -90,18 +118,118 @@ const LoginPage = () => {
           )}
         </h2>
 
-        {currState === "Sign Up" && !isDataSubmitted && (
-          <input
-            onChange={(e) => setFullName(e.target.value)}
-            value={fullName}
-            type="text"
-            className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300"
-            placeholder="Full Name"
-            required
-          />
-        )}
+        {currState === "Sign Up" && !isDataSubmitted ? (
+          <>
+            <input
+              onChange={(e) => setFullName(e.target.value)}
+              value={fullName}
+              type="text"
+              placeholder="Full Name"
+              required
+              className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300"
+            />
+            <input
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              type="email"
+              placeholder="Email Address"
+              autoComplete="email"
+              required
+              className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300"
+            />
+            <input
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              type="password"
+              placeholder="Password"
+              autoComplete="new-password"
+              required
+              className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300"
+            />
+          </>
+        ) : currState === "Sign Up" && isDataSubmitted ? (
+          <>
+            <div className="flex gap-4">
+              <input
+                onChange={(e) => setRollNumber(e.target.value)}
+                value={rollNumber}
+                type="text"
+                placeholder="Roll Number"
+                required
+                className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300 w-1/2"
+              />
+              <select
+                onChange={(e) => setCurrentYear(e.target.value)}
+                value={currentYear}
+                required
+                className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300 text-gray-300 w-1/2"
+              >
+                <option value="" disabled>
+                  Select Current Year
+                </option>
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
+                <option value="5">5th Year</option>
+              </select>
+            </div>
 
-        {!isDataSubmitted && (
+            <div className="flex gap-4">
+              <input
+                onChange={(e) => setDepartment(e.target.value)}
+                value={department}
+                type="text"
+                placeholder="Department"
+                required
+                className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300 w-1/2"
+              />
+              <input
+                onChange={(e) => setCourse(e.target.value)}
+                value={course}
+                type="text"
+                placeholder="Course"
+                required
+                className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300 w-1/2"
+              />
+            </div>
+
+            <div className="flex gap-4">
+              <select
+                onChange={(e) => setGender(e.target.value)}
+                value={gender}
+                required
+                className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300 text-gray-300 w-1/2"
+              >
+                <option value="" disabled>
+                  Select Gender
+                </option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Can't Say">Can't Say</option>
+              </select>
+              <input
+                onChange={(e) => setDob(e.target.value)}
+                value={dob}
+                type={dobType}
+                onFocus={() => setDobType("date")}
+                onBlur={() => (dob === "" ? setDobType("text") : null)}
+                placeholder="Date of Birth"
+                required
+                className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 flex-grow w-1/2 bg-white/10 placeholder-gray-300"
+              />
+            </div>
+
+            <textarea
+              onChange={(e) => setBio(e.target.value)}
+              value={bio}
+              rows={2}
+              className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300 resize-none w-full"
+              placeholder="Provide Short bio..."
+              required
+            />
+          </>
+        ) : (
           <>
             <input
               onChange={(e) => setEmail(e.target.value)}
@@ -112,43 +240,38 @@ const LoginPage = () => {
               required
               className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300"
             />
-
             <input
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               type="password"
               placeholder="Password"
-              autoComplete={
-                currState === "Login" ? "current-password" : "new-password"
-              }
+              autoComplete="current-password"
               required
               className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300"
             />
           </>
         )}
 
-        {currState === "Sign Up" && isDataSubmitted && (
-          <textarea
-            onChange={(e) => setBio(e.target.value)}
-            value={bio}
-            rows={4}
-            className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300 resize-none"
-            placeholder="Provide Short bio..."
-            required
-          />
-        )}
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
         <button
           type="submit"
+          disabled={loading}
           className="py-3 bg-gradient-to-r from-purple-400 to-violet-600 text-white rounded-md cursor-pointer hover:from-purple-500 hover:to-violet-700 transform hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg hover:shadow-xl relative overflow-hidden group"
         >
           <span className="relative z-10">
-            {currState === "Sign Up" ? "Create Account" : "Login Now"}
+            {loading
+              ? "Loading..."
+              : currState === "Sign Up"
+              ? isDataSubmitted
+                ? "Create Account"
+                : "Next"
+              : "Login Now"}
           </span>
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-violet-700 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
         </button>
 
-        {currState === "Sign Up" && (
+        {currState === "Sign Up" && !isDataSubmitted && (
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <input
               type="checkbox"
