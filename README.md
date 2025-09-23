@@ -3,7 +3,7 @@
 A lightweight chat application designed for college campuses.
 
 🔗 **Live Preview**  
-[Click here to visit CampusTalk]()
+[Click here to visit CampusTalk](https://campus-talk.onrender.com)
 
 **CampusTalk** is a modern real-time chat and profile-based web application that lets users connect through messaging and personal expression. From authentication to real-time conversations, CampusTalk is built to be fast, clean, and intuitive.
 
