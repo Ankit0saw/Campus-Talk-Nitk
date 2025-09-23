@@ -258,7 +258,7 @@ const RightSidebar = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="fixed bottom-0 right-0 p-2">
+        <div className="fixed bottom-0 right-5 p-4 flex justify-center">
           <div className="flex lg:flex-row sm:flex-col md:gap-y-2 items-center justify-center gap-x-4">
             <button
               onClick={() => navigate("/profile")}

@@ -215,7 +215,6 @@ const LoginPage = () => {
                 onFocus={() => setDobType("date")}
                 onBlur={() => (dob === "" ? setDobType("text") : null)}
                 placeholder="Date of Birth"
-                required
                 className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 flex-grow w-1/2 bg-white/10 placeholder-gray-300"
               />
             </div>
