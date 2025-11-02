@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import Sidebar from "../components/Sidebar";
+import LeftSidebar from "../components/LeftSidebar";
 import ChatContainer from "../components/ChatContainer";
 import RightSidebar from "../components/RightSidebar";
 import { ChatContext } from "../../context/ChatContext";
@@ -16,7 +16,7 @@ const ChatPage = () => {
             : "md:grid-cols-2"
         }`}
       >
-        <Sidebar />
+        <LeftSidebar />
         <ChatContainer />
         <RightSidebar />
       </div>

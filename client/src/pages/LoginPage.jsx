@@ -1,11 +1,7 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import assets from "../assets/assets.js";
 import { AuthContext } from "../../context/AuthContext.jsx";
-import { LoginPageAnimation } from "../components/LoginPageAnimation.js";
-import {
-  JumpingBalls,
-  RotatingCircles,
-} from "../components/LoginPageBackground.jsx";
+import { LoginPageAnimation, JumpingBalls, RotatingCircles } from "../components/LoginPageAnimation";
 
 const LoginPage = () => {
   const [currState, setCurrState] = useState("Sign Up");
@@ -13,7 +9,6 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [bio, setBio] = useState("");
-
   const [gender, setGender] = useState("");
   const [rollNumber, setRollNumber] = useState("");
   const [department, setDepartment] = useState("");
@@ -30,23 +25,64 @@ const LoginPage = () => {
 
   const { login } = useContext(AuthContext);
 
+  // OTP states
+  const [otp, setOtp] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
+
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     setError("");
 
-    if (currState === "Sign Up" && !isDataSubmitted) {
+    // STEP 1: Send OTP after basic info
+    if (currState === "Sign Up" && !isOtpSent && !isOtpVerified) {
       if (!email.endsWith("@nitk.edu.in")) {
         setError("Access Denied. Only @nitk.edu.in emails are allowed.");
         return;
       }
-      setIsDataSubmitted(true);
+
+      try {
+        const response = await fetch("http://localhost:5000/send-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        const data = await response.json();
+        if (data.success) {
+          setIsOtpSent(true);
+        } else {
+          setError("Failed to send OTP. Try again.");
+        }
+      } catch (err) {
+        setError("Server error. Try again.");
+      }
       return;
     }
 
-    setLoading(true);
+    // STEP 2: Verify OTP
+    if (currState === "Sign Up" && isOtpSent && !isOtpVerified) {
+      try {
+        const response = await fetch("http://localhost:5000/verify-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, otp }),
+        });
+        const data = await response.json();
+        if (data.success) {
+          setIsOtpVerified(true);
+          setIsDataSubmitted(true);
+        } else {
+          setError("Invalid OTP. Please try again.");
+        }
+      } catch (err) {
+        setError("Server error. Try again.");
+      }
+      return;
+    }
 
-    // Simulate login function
-    if (currState === "Sign Up") {
+    // STEP 3: Complete signup after OTP verified
+    setLoading(true);
+    if (currState === "Sign Up" && isOtpVerified) {
       const signupData = {
         fullName,
         email,
@@ -59,13 +95,10 @@ const LoginPage = () => {
         currentYear,
         dob,
       };
-
       await login("signup", signupData);
     } else if (currState === "Login") {
-      // Login logic
       await login("login", { email, password });
     }
-
     setLoading(false);
   };
 
@@ -74,6 +107,8 @@ const LoginPage = () => {
     setTimeout(() => {
       setCurrState(newState);
       setIsDataSubmitted(false);
+      setIsOtpSent(false);
+      setIsOtpVerified(false);
       setIsTransitioning(false);
     }, 300);
   };
@@ -84,10 +119,8 @@ const LoginPage = () => {
         currState === "Login" ? "flex-row-reverse" : ""
       }`}
     >
-      {/* The background animations from their own component */}
       <JumpingBalls isTransitioning={isTransitioning} />
 
-      {/* Left side - Logo with Rotating Circles */}
       <div className="relative">
         <RotatingCircles isTransitioning={isTransitioning} />
         <img
@@ -99,7 +132,6 @@ const LoginPage = () => {
         />
       </div>
 
-      {/* Right side */}
       <form
         onSubmit={onSubmitHandler}
         className={`border-2 bg-white/8 text-white border-gray-500 p-6 flex flex-col gap-6 rounded-lg shadow-lg backdrop-blur-md hover:shadow-2xl transition-all duration-500 ${
@@ -118,37 +150,55 @@ const LoginPage = () => {
           )}
         </h2>
 
+        {/* --- SIGN UP FIELDS --- */}
         {currState === "Sign Up" && !isDataSubmitted ? (
           <>
-            <input
-              onChange={(e) => setFullName(e.target.value)}
-              value={fullName}
-              type="text"
-              placeholder="Full Name"
-              required
-              className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300"
-            />
-            <input
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              type="email"
-              placeholder="Email Address"
-              autoComplete="email"
-              required
-              className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300"
-            />
-            <input
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              type="password"
-              placeholder="Password"
-              autoComplete="new-password"
-              required
-              className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300"
-            />
+            {!isOtpSent && (
+              <>
+                <input
+                  onChange={(e) => setFullName(e.target.value)}
+                  value={fullName}
+                  type="text"
+                  placeholder="Full Name"
+                  required
+                  className="p-2 border border-gray-500 rounded-md bg-white/10 placeholder-gray-300"
+                />
+                <input
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                  type="email"
+                  placeholder="Email Address"
+                  required
+                  className="p-2 border border-gray-500 rounded-md bg-white/10 placeholder-gray-300"
+                />
+                <input
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                  type="password"
+                  placeholder="Password"
+                  required
+                  className="p-2 border border-gray-500 rounded-md bg-white/10 placeholder-gray-300"
+                />
+              </>
+            )}
+
+            {/* --- OTP input field --- */}
+            {isOtpSent && !isOtpVerified && (
+              <div className="flex flex-col gap-2">
+                <input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  placeholder="Enter OTP"
+                  required
+                  className="p-2 border border-gray-500 rounded-md bg-white/10 placeholder-gray-300"
+                />
+              </div>
+            )}
           </>
         ) : currState === "Sign Up" && isDataSubmitted ? (
           <>
+            {/* Other sign-up details after OTP verification */}
             <div className="flex gap-4">
               <input
                 onChange={(e) => setRollNumber(e.target.value)}
@@ -156,13 +206,13 @@ const LoginPage = () => {
                 type="text"
                 placeholder="Roll Number"
                 required
-                className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300 w-1/2"
+                className="p-2 border border-gray-500 rounded-md bg-white/10 placeholder-gray-300 w-1/2"
               />
               <select
                 onChange={(e) => setCurrentYear(e.target.value)}
                 value={currentYear}
                 required
-                className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300 text-gray-300 w-1/2"
+                className="p-2 border border-gray-500 rounded-md bg-white/10 text-gray-300 w-1/2"
               >
                 <option value="" disabled>
                   Select Current Year
@@ -182,7 +232,7 @@ const LoginPage = () => {
                 type="text"
                 placeholder="Department"
                 required
-                className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300 w-1/2"
+                className="p-2 border border-gray-500 rounded-md bg-white/10 placeholder-gray-300 w-1/2"
               />
               <input
                 onChange={(e) => setCourse(e.target.value)}
@@ -190,7 +240,7 @@ const LoginPage = () => {
                 type="text"
                 placeholder="Course"
                 required
-                className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300 w-1/2"
+                className="p-2 border border-gray-500 rounded-md bg-white/10 placeholder-gray-300 w-1/2"
               />
             </div>
 
@@ -199,7 +249,7 @@ const LoginPage = () => {
                 onChange={(e) => setGender(e.target.value)}
                 value={gender}
                 required
-                className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300 text-gray-300 w-1/2"
+                className="p-2 border border-gray-500 rounded-md bg-white/10 text-gray-300 w-1/2"
               >
                 <option value="" disabled>
                   Select Gender
@@ -215,7 +265,7 @@ const LoginPage = () => {
                 onFocus={() => setDobType("date")}
                 onBlur={() => (dob === "" ? setDobType("text") : null)}
                 placeholder="Date of Birth"
-                className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 flex-grow w-1/2 bg-white/10 placeholder-gray-300"
+                className="p-2 border border-gray-500 rounded-md bg-white/10 placeholder-gray-300 w-1/2"
               />
             </div>
 
@@ -223,30 +273,29 @@ const LoginPage = () => {
               onChange={(e) => setBio(e.target.value)}
               value={bio}
               rows={2}
-              className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300 resize-none w-full"
               placeholder="Provide Short bio..."
               required
+              className="p-2 border border-gray-500 rounded-md bg-white/10 placeholder-gray-300 resize-none w-full"
             />
           </>
         ) : (
           <>
+            {/* LOGIN FORM */}
             <input
               onChange={(e) => setEmail(e.target.value)}
               value={email}
               type="email"
               placeholder="Email Address"
-              autoComplete="email"
               required
-              className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300"
+              className="p-2 border border-gray-500 rounded-md bg-white/10 placeholder-gray-300"
             />
             <input
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               type="password"
               placeholder="Password"
-              autoComplete="current-password"
               required
-              className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 focus:scale-105 bg-white/10 placeholder-gray-300"
+              className="p-2 border border-gray-500 rounded-md bg-white/10 placeholder-gray-300"
             />
           </>
         )}
@@ -256,30 +305,18 @@ const LoginPage = () => {
         <button
           type="submit"
           disabled={loading}
-          className="py-3 bg-gradient-to-r from-purple-400 to-violet-600 text-white rounded-md cursor-pointer hover:from-purple-500 hover:to-violet-700 transform hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg hover:shadow-xl relative overflow-hidden group"
+          className="py-3 bg-gradient-to-r from-purple-400 to-violet-600 text-white rounded-md cursor-pointer hover:from-purple-500 hover:to-violet-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
         >
-          <span className="relative z-10">
-            {loading
-              ? "Loading..."
-              : currState === "Sign Up"
-              ? isDataSubmitted
-                ? "Create Account"
-                : "Next"
-              : "Login Now"}
-          </span>
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-violet-700 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+          {loading
+            ? "Loading..."
+            : currState === "Sign Up"
+            ? !isOtpSent
+              ? "Send OTP"
+              : !isOtpVerified
+              ? "Verify OTP"
+              : "Create Account"
+            : "Login Now"}
         </button>
-
-        {currState === "Sign Up" && !isDataSubmitted && (
-          <div className="flex items-center gap-2 text-sm text-gray-500">
-            <input
-              type="checkbox"
-              required
-              className="transform hover:scale-110 transition-transform duration-200 accent-purple-500"
-            />
-            <p>Agree to the terms of use & privacy policy.</p>
-          </div>
-        )}
 
         <div className="flex flex-col gap-2">
           {currState === "Sign Up" ? (
@@ -287,7 +324,7 @@ const LoginPage = () => {
               Already have an account?
               <span
                 onClick={() => handleStateChange("Login")}
-                className="font-medium text-violet-500 cursor-pointer hover:text-violet-400 transition-colors duration-200 hover:underline ml-1"
+                className="font-medium text-violet-500 cursor-pointer hover:underline ml-1"
               >
                 Login here
               </span>
@@ -297,7 +334,7 @@ const LoginPage = () => {
               Create an account
               <span
                 onClick={() => handleStateChange("Sign Up")}
-                className="font-medium text-violet-500 cursor-pointer hover:text-violet-400 transition-colors duration-200 hover:underline ml-1"
+                className="font-medium text-violet-500 cursor-pointer hover:underline ml-1"
               >
                 Click here
               </span>
@@ -306,11 +343,7 @@ const LoginPage = () => {
         </div>
       </form>
 
-      <style>
-        {`
-        ${LoginPageAnimation}
-      `}
-      </style>
+      <LoginPageAnimation/>
     </div>
   );
 };
