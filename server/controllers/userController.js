@@ -12,7 +12,7 @@ export const signup = async (req, res) => {
     bio,
     gender,
     rollNumber,
-    department,
+    courseTitle,
     course,
     currentYear,
   } = req.body;
@@ -25,7 +25,7 @@ export const signup = async (req, res) => {
       !bio ||
       !gender ||
       !rollNumber ||
-      !department ||
+      !courseTitle ||
       !course ||
       !currentYear
     ) {
@@ -50,7 +50,7 @@ export const signup = async (req, res) => {
       bio,
       gender,
       rollNumber,
-      department,
+      courseTitle,
       course,
       currentYear,
     });
@@ -105,7 +105,7 @@ export const updateProfile = async (req, res) => {
       password,
       dob,
       gender,
-      department,
+      courseTitle,
       course,
       currentYear,
     } = req.body;
@@ -116,7 +116,7 @@ export const updateProfile = async (req, res) => {
     if (bio) updates.bio = bio;
     if (dob) updates.dob = dob;
     if (gender) updates.gender = gender;
-    if (department) updates.department = department;
+    if (courseTitle) updates.courseTitle = courseTitle;
     if (course) updates.course = course;
     if (currentYear) updates.currentYear = currentYear;
 

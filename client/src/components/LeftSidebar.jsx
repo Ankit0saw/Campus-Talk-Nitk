@@ -5,14 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { ChatContext } from "../../context/ChatContext";
 
 const LeftSidebar = () => {
-  const {
-    getUsers,
-    users,
-    selectedUser,
-    setSelectedUser,
-    unseenMessages,
-    setUnseenMessages,
-  } = useContext(ChatContext);
+  const { getUsers, users, selectedUser, setSelectedUser, unseenMessages, setUnseenMessages } = useContext(ChatContext);
   const { logout, onlineUsers } = useContext(AuthContext);
   const [input, setInput] = useState(false);
   const [sortedUsers, setSortedUsers] = useState([]);
@@ -30,6 +23,7 @@ const LeftSidebar = () => {
     const onlineUsersList = users.filter((user) =>
       onlineUsers.includes(user._id)
     );
+    
     const offlineUsersList = users.filter(
       (user) => !onlineUsers.includes(user._id)
     );

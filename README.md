@@ -60,8 +60,9 @@ A lightweight chat application designed for college campuses.
 - Live online/offline user status and unread message counts with timestamps
 - Smooth transitions, gradient buttons, and form validations for better UX
 - Profile editing with avatar upload preview powered by Cloudinary
-- Users can update all personal details like name, gender, DOB, department, course, currentYear, Bio etc.
+- Users can update all personal details like name, gender, DOB, courseTitle, course, currentYear, Bio etc.
 - Secure password update and profile management
+- Added OTP verification for new User Account
 
 ---
 

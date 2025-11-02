@@ -6,18 +6,17 @@ import { connectDB } from "./library/db.js";
 import userRouter from "./routes/userRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
 import { Server } from "socket.io";
-import nodemailer from "nodemailer";
 import bodyParser from "body-parser";
+import otpRouter from "./routes/otpRoutes.js";
+
 
 // Create Express app and HTTP server
 const app = express();
 const server = http.createServer(app);
 
+// Cors Setup
 app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
+  cors()
 );
 
 // Middleware setup
@@ -52,13 +51,14 @@ io.on("connection", (socket) => {
   });
 });
 
-
 // Routes setup
 app.use("/api/status", (req, res) => res.send("Server is live"));
 app.use("/api/auth", userRouter);
 app.use("/api/messages", messageRouter);
+app.use("/api/otp", otpRouter);
 
 const PORT = process.env.PORT || 5000;
+
 server.listen(PORT, "0.0.0.0", () => {
   // Connect to Database after server starts
   connectDB();

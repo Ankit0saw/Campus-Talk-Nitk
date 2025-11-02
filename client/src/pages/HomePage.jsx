@@ -1,20 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  MessageCircle,
-  Users,
-  Shield,
-  Zap,
-  Globe,
-  Heart,
-  Star,
-  Send,
-  Video,
-  Phone,
-  Image,
-  Smile,
-  Lock,
-  Bell,
-} from "lucide-react";
+import { MessageCircle, Users, Shield, Zap, Globe, Heart, Star, Send, Video, Phone, Image, Smile, Lock, Bell } from "lucide-react";
 import { HomePageAnimation } from "../components/HomePageAnimation";
 
 const HomePage = () => {
@@ -29,36 +14,31 @@ const HomePage = () => {
     {
       icon: <MessageCircle className="w-8 h-8" />,
       title: "Instant Messaging",
-      description:
-        "Lightning-fast message delivery with read receipts and typing indicators.",
+      description: "Lightning-fast message delivery with read receipts and typing indicators.",
       color: "from-purple-400 to-violet-600",
     },
     {
       icon: <Video className="w-8 h-8" />,
       title: "Video Calls",
-      description:
-        "Crystal clear HD video calls with screen sharing and recording capabilities.",
+      description: "Crystal clear HD video calls with screen sharing and recording capabilities.",
       color: "from-green-400 to-teal-600",
     },
     {
       icon: <Shield className="w-8 h-8" />,
       title: "End-to-End Encryption",
-      description:
-        "Military-grade security ensures your conversations remain completely private.",
+      description: "Military-grade security ensures your conversations remain completely private.",
       color: "from-red-400 to-pink-600",
     },
     {
       icon: <Image className="w-8 h-8" />,
       title: "Media Sharing",
-      description:
-        "Share photos, videos, documents, and files of any size instantly.",
+      description: "Share photos, videos, documents, and files of any size instantly.",
       color: "from-yellow-400 to-orange-600",
     },
     {
       icon: <Globe className="w-8 h-8" />,
       title: "Cross-Platform",
-      description:
-        "Seamlessly sync across all your devices - mobile, desktop, and web.",
+      description: "Seamlessly sync across all your devices - mobile, desktop, and web.",
       color: "from-cyan-400 to-blue-600",
     },
   ];

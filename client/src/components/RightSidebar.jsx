@@ -11,20 +11,6 @@ const RightSidebar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
 
-  // Get all the images from the messages and set them to state
-  useEffect(() => {
-    setMsgFiles(
-      messages
-        .filter((msg) => msg.image || msg.video)
-        .map((msg) => msg.image || msg.video)
-    );
-  }, [messages]);
-
-  // Reset expanded state when selected user changes
-  useEffect(() => {
-    setIsExpanded(false);
-  }, [selectedUser]);
-
   // Format date function
   const formatDate = (dateString) => {
     if (!dateString) return "Not specified";
@@ -35,6 +21,21 @@ const RightSidebar = () => {
       day: "numeric",
     });
   };
+
+  // Reset expanded state when selected user changes
+  useEffect(() => {
+    setIsExpanded(false);
+  }, [selectedUser]);
+
+  // Get all the images from the messages and set them to state
+  useEffect(() => {
+    setMsgFiles(
+      messages
+        .filter((msg) => msg.image || msg.video)
+        .map((msg) => msg.image || msg.video)
+    );
+  }, [messages]);
+
 
   return (
     selectedUser && (
@@ -138,11 +139,11 @@ const RightSidebar = () => {
                 </span>
               </div>
 
-              {/* Department */}
+              {/* Course Title */}
               <div className="flex items-center justify-between">
-                <span className="text-gray-400 font-medium">Department:</span>
+                <span className="text-gray-400 font-medium">Course Title:</span>
                 <span className="text-gray-200 text-right flex-1 ml-2">
-                  {selectedUser.department || "Not specified"}
+                  {selectedUser.courseTitle || "Not specified"}
                 </span>
               </div>
 
