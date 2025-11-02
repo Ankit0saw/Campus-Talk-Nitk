@@ -16,7 +16,10 @@ const server = http.createServer(app);
 
 // Cors Setup
 app.use(
-  cors()
+  cors({
+    origin: ["https://campus-talk.onrender.com", "http://localhost:5173"],
+    credentials: true,
+  })
 );
 
 // Middleware setup

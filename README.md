@@ -49,6 +49,7 @@ A lightweight chat application designed for college campuses.
 - **dotenv** – Environment variable management
 - **CORS** – Cross-origin resource sharing
 - **Nodemon** – Development server auto-reload
+- **Nodemailer** - Used to send emails like OTPs, Confirmations etc
 
 ---
 
