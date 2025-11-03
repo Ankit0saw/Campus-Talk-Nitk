@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 
 const otpRouter = express.Router();
 let otpStore = {}; // { email: otp }
+console.log("SMTP:", process.env.MAIL_USER, process.env.MAIL_PASS ? "✓ PASS FOUND" : "✗ MISSING");
 
 // Send OTP route
 otpRouter.post("/send-otp", async (req, res) => {
@@ -15,12 +16,15 @@ otpRouter.post("/send-otp", async (req, res) => {
   try {
     // Configure nodemailer
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,       // SSL port
-      secure: true,  // must be true for port 465
+      host: "smtp-relay.brevo.com",
+      port: 587,    
+      secure: false,
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false,
       },
     });
 
@@ -34,10 +38,11 @@ otpRouter.post("/send-otp", async (req, res) => {
     });
 
     await transporter.sendMail({
-      from: process.env.MAIL_USER,
+      from: `"CampusTalk-Admin" <ankitkrrsss@gmail.com>`,
       to: email,
       subject: "Your OTP for Signup",
-      text: `Your OTP is ${otp}`,
+      text: `Use this OTP to Create Account at CampusTalk-NITK ${otp}`,
+      //html: `<h3>Your OTP is <b>${otp}</b></h3>`,
     });
 
     return res.json({ success: true, message: "OTP sent successfully" });
