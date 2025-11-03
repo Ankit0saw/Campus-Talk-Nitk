@@ -18,8 +18,6 @@ const server = http.createServer(app);
 app.use(
   cors({
     origin: ["https://campus-talk.onrender.com", "http://localhost:5173"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization", "token"],
     credentials: true,
   })
 );
