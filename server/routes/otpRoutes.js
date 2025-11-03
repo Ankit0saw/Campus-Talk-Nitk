@@ -14,11 +14,11 @@ console.log('Email credentials check:', {
 // Create transporter (Gmail)
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465, // SSL port
-  secure: true,
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS, // Gmail App Password
+    pass: process.env.MAIL_PASS, 
   },
 });
 
