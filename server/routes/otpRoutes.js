@@ -1,11 +1,11 @@
 import express from "express";
 import nodemailer from "nodemailer";
 
-const router = express.Router();
+const otpRouter = express.Router();
 let otpStore = {}; // { email: otp }
 
 // Send OTP route
-router.post("/send-otp", async (req, res) => {
+otpRouter.post("/send-otp", async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ success: false, message: "Email required" });
 
@@ -48,7 +48,7 @@ router.post("/send-otp", async (req, res) => {
 });
 
 // Verify OTP route
-router.post("/verify-otp", (req, res) => {
+otpRouter.post("/verify-otp", (req, res) => {
   const { email, otp } = req.body;
 
   if (otpStore[email] && otpStore[email] == otp) {
@@ -59,4 +59,4 @@ router.post("/verify-otp", (req, res) => {
   return res.status(400).json({ success: false, message: "Invalid or expired OTP" });
 });
 
-export default router;
+export default otpRouter;
