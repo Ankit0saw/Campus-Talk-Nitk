@@ -16,12 +16,21 @@ router.post("/send-otp", async (req, res) => {
     // Configure nodemailer
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
-  port: 465,       // SSL port
-  secure: true,  
+      port: 465,       // SSL port
+      secure: true,  // must be true for port 465
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
       },
+    });
+
+    // Verify transporter configuration
+    transporter.verify((error, success) => {
+      if (error) {
+        console.log('Transporter verification failed:', error);
+      } else {
+        console.log('Transporter is ready to send emails');
+      }
     });
 
     await transporter.sendMail({
