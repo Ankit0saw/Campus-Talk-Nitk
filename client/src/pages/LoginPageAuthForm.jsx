@@ -41,6 +41,7 @@ const LoginPageAuthForm = ({ currState, setCurrState, isDataSubmitted, setIsData
           body: JSON.stringify({ email }),
         });
         const data = await response.json();
+        console.log("call for send-otp", data);
         if (data.success) setIsOtpSent(true);
         else setError("Failed to send OTP. Try again.");
       } catch (err) {
