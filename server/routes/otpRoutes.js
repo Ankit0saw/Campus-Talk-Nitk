@@ -38,7 +38,7 @@ otpRouter.post("/send-otp", async (req, res) => {
     });
 
     await transporter.sendMail({
-      from: `"CampusTalk-Admin" <${process.env.MAIL_USER}>`,
+      from: `"CampusTalk-Admin" <ankitkrrsss@gmail.com>`,
       to: email,
       subject: "Your OTP for Signup",
       text: `Use this OTP to Create Account at CampusTalk-NITK ${otp}`,
